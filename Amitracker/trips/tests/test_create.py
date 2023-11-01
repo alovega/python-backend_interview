@@ -3,7 +3,10 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APIClient
 from trips.models import Vehicle, Customer, Driver, Trips
-from trips.serializers import VehicleSerializer, CustomerSerializer, DriverSerializer, TripsSerializer
+from rest_framework.authtoken.models import Token
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class VehicleCreateViewTest(TestCase):
     def setUp(self):
@@ -43,23 +46,44 @@ class DriverCreateViewTest(TestCase):
         self.assertEqual(Driver.objects.count(), 1)
         driver = Driver.objects.get()
         self.assertEqual(driver.name, 'Alice')
-
 class TripsCreateViewTest(TestCase):
     def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.token = Token.objects.create(user=self.user).key
         self.client = APIClient()
-        self.trips_data = {
-            'vehicle_id': {'vehicle_type': 'Car', 'vehicle_identifier': '123'},
-            'customer_id': {'name': 'John Doe', 'email': 'john@example.com'},
+
+        # Create Vehicle, Customer, and Driver instances
+        self.vehicle = Vehicle.objects.create(vehicle_type='Car', vehicle_identifier='123')
+        self.customer = Customer.objects.create(name='John Doe', email='john@example.com')
+        self.driver = Driver.objects.create(name='Driver Name', email='driver@example.com')
+
+    def test_create_trip_authenticated(self):
+        trips_data = {
+            'vehicle_id': self.vehicle.id,
+            'customer_id': self.customer.id,
+            'driver_id': self.driver.id,
             'address': 'Test Address',
             'cargo_tonnage': 5.0,
             'address_type': 'pickup',
-            'done_by_user': 'testuser'
+            'done_by_user': self.user.id
         }
-        self.url = reverse('trips-create')
 
-    def test_create_trips(self):
-        response = self.client.post(self.url, self.trips_data, format='json')
+        # Add the api_token as a parameter in the URL
+        response = self.client.post(f'/trips/create/?api_token={self.token}', trips_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Trips.objects.count(), 1)
         trips = Trips.objects.get()
         self.assertEqual(trips.address, 'Test Address')
+
+    def test_create_trip_unauthenticated(self):
+        trips_data = {
+            'vehicle_id': self.vehicle.id,
+            'customer_id': self.customer.id,
+            'address': 'Test Address',
+            'cargo_tonnage': 5.0,
+            'address_type': 'pickup'
+        }
+
+        response = self.client.post('/trips/create/', trips_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Trips.objects.count(), 0)

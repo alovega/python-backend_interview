@@ -19,5 +19,5 @@ urlpatterns = [
 
     # URL pattern for user registration
     path('register/', UserRegistrationView.as_view(), name='user-registration'),
-    path('api-token/', obtain_auth_token, name='api_token_auth'),
+    path('api/token/', obtain_auth_token, name='api_token_auth'),
 ]

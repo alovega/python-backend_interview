@@ -1,14 +1,17 @@
 from rest_framework import generics
 from rest_framework.response import Response
+from rest_framework.throttling import UserRateThrottle
 from rest_framework import status
 from .models import Trips, Customer, Vehicle, Driver
 from .custom_auth import NoAuthentication, TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.authtoken.models import Token
 from .serializers import TripsSerializer, DriverSerializer, CustomerSerializer, VehicleSerializer, UserRegistrationSerializer
 
 class TripsCreateView(generics.CreateAPIView):
     queryset = Trips.objects.all()
     serializer_class = TripsSerializer
+    authentication_classes = [TokenAuthentication]
+    
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -99,4 +102,13 @@ class DriverCreateView(generics.CreateAPIView):
 
 class UserRegistrationView(generics.CreateAPIView):
     serializer_class = UserRegistrationSerializer
-    authentication_classes = [NoAuthentication] 
+    authentication_classes = [NoAuthentication]
+    throttle_classes = [UserRateThrottle]
+
+    def create(self, request, *args, **kwargs):
+        response = super(UserRegistrationView, self).create(request, *args, **kwargs)
+        if response.status_code == status.HTTP_201_CREATED:
+            user = response.data
+            token, created = Token.objects.get_or_create(user=user)
+            response.data['token'] = token.key
+        return response

@@ -31,8 +31,9 @@ class Customer(models.Model):
 
 
 class Trips(models.Model):
-    vehicle = models.ForeignKey(Vehicle, on_delete=models.CASCADE)  # Reference to Vehicle model
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Reference to Customer model
+    vehicle_id = models.ForeignKey(Vehicle, on_delete=models.CASCADE)  # Reference to Vehicle model
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE)  # Reference to Customer model
+    driver_id = models.ForeignKey(Driver, on_delete=models.CASCADE)  # Reference to Customer model
     address = models.CharField(max_length=100, default='Nairobi')
     cargo_tonnage = models.DecimalField(max_digits=10, decimal_places=2) 
     address_type = models.CharField(choices=[('pickup', 'pickup_point'), ('drop', 'drop_off_point')], default='pickup', max_length=100)
@@ -46,7 +47,7 @@ class Trips(models.Model):
 
 
 class CustomUser(AbstractUser):
-    # Your CustomUser fields here
+    api_token = models.CharField(max_length=100, blank=True)
 
     # Specify unique related_name values for groups and user_permissions
     groups = models.ManyToManyField(

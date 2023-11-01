@@ -106,12 +106,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# REST_FRAMEWORK = {
-#     'DEFAULT_AUTHENTICATION_CLASSES': [
-#         'trips.custom_auth.TokenAuthentication',
-#         'trips.custom_auth.NoAuthentication'
-#     ],
-# }
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '4/second',
+        'user': '4/second',
+    },
+}
 
 
 # Internationalization

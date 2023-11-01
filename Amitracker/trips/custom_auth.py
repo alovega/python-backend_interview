@@ -9,7 +9,8 @@ class TokenAuthentication(BaseAuthentication):
 
         if api_token:
             try:
-                user = User.objects.get(api_token=api_token)
+                user = User.objects.get(auth_token=api_token)
+                request.user = user
                 return (user, None)
             except User.DoesNotExist:
                 pass
