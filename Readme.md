@@ -1,8 +1,14 @@
 # Amitracker
 
-Project description goes here.
+Amitracker is a simple django rest framework api that will be logging every driver trips details.
 
 ## Installation
+
+Before you begin, ensure you have the following installed on your system:
+
+- [Python](https://www.python.org/downloads/): This project requires Python 3.6 or higher. You can download and install Python from the official Python website.
+
+- [MySQL](https://www.mysql.com/downloads/): Make sure you have MySQL installed and running on your system. You can download and install MySQL from the official MySQL website.
 
 1. Clone the repository:
 
