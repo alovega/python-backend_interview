@@ -13,14 +13,11 @@ User = get_user_model()
 class UserRegistrationSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('username', 'password', 'email')  # Add more fields as needed
+        fields = ['username', 'email', 'password']  # Add more fields as needed
 
     def create(self, validated_data):
         password = validated_data.pop('password')
-        user = User(**validated_data)
-        user.set_password(password)
-        user.save()
-
+        user = User.objects.create_user(**validated_data, password=password)
         # Generate and save API token
         user.api_token = generate_unique_api_token()  # Implement generate_unique_api_token() function
         user.save()

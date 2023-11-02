@@ -27,7 +27,7 @@ class TripsCreateView(generics.CreateAPIView):
             response_data = {
                 'status_code': status.HTTP_400_BAD_REQUEST,
                 'status': 'Bad Request',
-                'description': 'Invalid data provided. Please check your input.'
+                'description': serializer.errors
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -49,7 +49,7 @@ class VehicleCreateView(generics.CreateAPIView):
             response_data = {
                 'status_code': status.HTTP_400_BAD_REQUEST,
                 'status': 'Bad Request',
-                'description': 'Invalid data provided. Please check your input.'
+                'description': serializer.errors
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -71,7 +71,7 @@ class CustomerCreateView(generics.CreateAPIView):
             response_data = {
                 'status_code': status.HTTP_400_BAD_REQUEST,
                 'status': 'Bad Request',
-                'description': 'Invalid data provided. Please check your input.'
+                'description': serializer.errors
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
 
@@ -94,7 +94,7 @@ class DriverCreateView(generics.CreateAPIView):
             response_data = {
                 'status_code': status.HTTP_400_BAD_REQUEST,
                 'status': 'Bad Request',
-                'description': 'Invalid data provided. Please check your input.'
+                'description': serializer.errors
             }
             return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
         
@@ -106,9 +106,19 @@ class UserRegistrationView(generics.CreateAPIView):
     throttle_classes = [UserRateThrottle]
 
     def create(self, request, *args, **kwargs):
-        response = super(UserRegistrationView, self).create(request, *args, **kwargs)
-        if response.status_code == status.HTTP_201_CREATED:
-            user = response.data
-            token, created = Token.objects.get_or_create(user=user)
-            response.data['token'] = token.key
-        return response
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            self.perform_create(serializer)
+            response_data = {
+                'status_code': status.HTTP_201_CREATED,
+                'status': 'Created',
+                'description': 'User created successfully.'
+            }
+            return Response(response_data, status=status.HTTP_201_CREATED)
+        else:
+            response_data = {
+                'status_code': status.HTTP_400_BAD_REQUEST,
+                'status': 'Bad Request',
+                'description': serializer.errors
+            }
+            return Response(response_data, status=status.HTTP_400_BAD_REQUEST)
