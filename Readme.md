@@ -63,5 +63,5 @@ Before you begin, ensure you have the following installed on your system:
 
 please use browsable web api bnavigate to http://127.0.0.1:8000/. and get the list of all the endpoints
 
-API documentation can be found at [Postman Collection - API Documentation](https://documenter.postman.com/preview/23551958-7e2569c1-740e-4943-9775-7cbd7b152ae7?environment=&versionTag=latest&apiName=CURRENT&version=latest&documentationLayout=classic-double-column&documentationTheme=light&logo=https%3A%2F%2Fres.cloudinary.com%2Fpostman%2Fimage%2Fupload%2Ft_team_logo%2Fv1%2Fteam%2Fanonymous_team&logoDark=https%3A%2F%2Fres.cloudinary.com%2Fpostman%2Fimage%2Fupload%2Ft_team_logo%2Fv1%2Fteam%2Fanonymous_team&right-sidebar=303030&top-bar=FFFFFF&highlight=FF6C37&right-sidebar-dark
+API documentation can be found at [Postman Collection - API Documentation](https://documenter.postman.com/preview/23551958-7e2569c1-740e-4943-9775-7cbd7b152ae7?environment=&versionTag=latest&apiName=CURRENT&version=latest&documentationLayout=classic-double-column&documentationTheme=light&logo=https%3A%2F%2Fres.cloudinary.com%2Fpostman%2Fimage%2Fupload%2Ft_team_logo%2Fv1%2Fteam%2Fanonymous_team&logoDark=https%3A%2F%2Fres.cloudinary.com%2Fpostman%2Fimage%2Fupload%2Ft_team_logo%2Fv1%2Fteam%2Fanonymous_team&right-sidebar=303030&top-bar=FFFFFF&highlight=FF6C37&right-sidebar-dark)
 
